@@ -10,7 +10,8 @@
         <h2>Выберите задачу:</h2>
         <ol>
             <li><a href="listBooks">Список книг</a></li>
-            
+            <li><a href="newBook">Добавть новую книгу</a></li>
+            <li><a href="newAuthor">Добавть нового автора</a></li>
         </ol>
     </body>
 </html>
