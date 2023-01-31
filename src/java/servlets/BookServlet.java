@@ -28,7 +28,8 @@ import session.BookFacade;
     "/newBook",
     "/createBook",
     "/newAuthor",
-    "/createAuthor"
+    "/createAuthor",
+    "/listAuthors",
 })
 public class BookServlet extends HttpServlet {
 
@@ -85,6 +86,10 @@ public class BookServlet extends HttpServlet {
                 authorFacade.create(newAuthor);
                 request.getRequestDispatcher("/newBook").forward(request, response);
                 break;
+            case "/listAuthors":
+                request.setAttribute("listAuthors", authorFacade.findAll());
+                request.getRequestDispatcher("/WEB-INF/listAuthors.jsp").forward(request, response);
+                break;    
         }
     }
 
