@@ -3,37 +3,38 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package servlets;
+package controller;
 
-import entity.Author;
-import entity.Book;
-import entity.Reader;
+import model.entity.Reader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.GregorianCalendar;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import session.AuthorFacade;
-import session.BookFacade;
-import session.ReaderFacade;
+import model.entity.Book;
+import model.entity.History;
+import model.session.BookFacade;
+import model.session.HistoryFacade;
+import model.session.ReaderFacade;
 
 /**
  *
  * @author Melnikov
  */
-@WebServlet(name = "ReaderServlet", urlPatterns = {
-    "/listReaders",
-    "/newReader",
-    "/createReader",
+@WebServlet(name = "HistoryServlet", urlPatterns = {
+    "/takeOnBook",
+    "/createHistory",
+    
     
 })
-public class ReaderServlet extends HttpServlet {
+public class HistoryServlet extends HttpServlet {
 
     @EJB private ReaderFacade readerFacade;
+    @EJB private BookFacade bookFacade;
+    @EJB private HistoryFacade historyFacade;
     
     
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
@@ -42,24 +43,28 @@ public class ReaderServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         String path = request.getServletPath();
         switch (path) {
-            case "/listReaders":
+            case "/takeOnBook":
                 request.setAttribute("listReaders", readerFacade.findAll());
-                request.getRequestDispatcher("/WEB-INF/listReaders.jsp").forward(request, response);
+                request.setAttribute("listBooks", bookFacade.findAll());
+                request.getRequestDispatcher("/WEB-INF/takeOnBook.jsp").forward(request, response);
                 break;
-            case "/newReader":
-                request.getRequestDispatcher("/WEB-INF/createReader.jsp").forward(request, response);
-                break;
-            case "/createReader":
-                String firstname = request.getParameter("forstname");
-                String lastname = request.getParameter("lastname");
-                String phone = request.getParameter("phone");
-                Reader reader = new Reader();
-                reader.setFirstname(firstname);
-                reader.setLastname(lastname);
-                reader.setPhone(phone);
-                readerFacade.create(reader);
-                request.setAttribute("listReaders", readerFacade.findAll());
-                request.getRequestDispatcher("/listReaders").forward(request, response);
+            
+            case "/createHistory":
+                String bookId = request.getParameter("bookId");
+                String readerId = request.getParameter("readerId");
+                Book book = bookFacade.find(Long.parseLong(bookId));
+                Reader reader = readerFacade.find(Long.parseLong(readerId));
+                History history = new History();
+                history.setBook(book);
+                history.setReader(reader);
+                history.setTakeOnBookDate(new GregorianCalendar().getTime());
+                historyFacade.create(history);
+                request.setAttribute("info", 
+                        "Книга \""+book.getName()
+                                +"\"выдана читателю "
+                                +reader.getFirstname()+" "+reader.getLastname()
+                );
+                request.getRequestDispatcher("/index.jsp").forward(request, response);
                 break;
             
         }

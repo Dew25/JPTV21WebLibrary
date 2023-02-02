@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package session;
+package model.session;
 
-import entity.Book;
+import model.entity.Reader;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -15,7 +15,7 @@ import javax.persistence.PersistenceContext;
  * @author Melnikov
  */
 @Stateless
-public class BookFacade extends AbstractFacade<Book> {
+public class ReaderFacade extends AbstractFacade<Reader> {
 
     @PersistenceContext(unitName = "JPTV21WebLibraryPU")
     private EntityManager em;
@@ -25,8 +25,8 @@ public class BookFacade extends AbstractFacade<Book> {
         return em;
     }
 
-    public BookFacade() {
-        super(Book.class);
+    public ReaderFacade() {
+        super(Reader.class);
     }
     
 }
