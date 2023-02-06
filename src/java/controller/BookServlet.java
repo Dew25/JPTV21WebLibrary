@@ -44,11 +44,11 @@ public class BookServlet extends HttpServlet {
         switch (path) {
             case "/listBooks":
                 request.setAttribute("listBooks", bookFacade.findAll());
-                request.getRequestDispatcher("/listBooks.jsp").forward(request, response);
+                request.getRequestDispatcher("/WEB-INF/books/listBooks.jsp").forward(request, response);
                 break;
             case "/newBook":
                 request.setAttribute("listAuthors", authorFacade.findAll());
-                request.getRequestDispatcher("/createBook.jsp").forward(request, response);
+                request.getRequestDispatcher("/WEB-INF/books/createBook.jsp").forward(request, response);
                 break;
             case "/createBook":
                 String name = request.getParameter("name");
@@ -72,10 +72,10 @@ public class BookServlet extends HttpServlet {
                     authorFacade.edit(a);
                 }
                 request.setAttribute("listBooks", bookFacade.findAll());
-                request.getRequestDispatcher("/listBooks.jsp").forward(request, response);
+                request.getRequestDispatcher("/WEB-INF/books/listBooks.jsp").forward(request, response);
                 break;
             case "/newAuthor":
-                request.getRequestDispatcher("/createAuthor.jsp").forward(request, response);
+                request.getRequestDispatcher("/WEB-INF/authors/createAuthor.jsp").forward(request, response);
                 break;
             case "/createAuthor":
                 String firstname = request.getParameter("firstname");
@@ -88,7 +88,7 @@ public class BookServlet extends HttpServlet {
                 break;
             case "/listAuthors":
                 request.setAttribute("listAuthors", authorFacade.findAll());
-                request.getRequestDispatcher("/WEB-INF/listAuthors.jsp").forward(request, response);
+                request.getRequestDispatcher("/WEB-INF/authors/listAuthors.jsp").forward(request, response);
                 break;    
         }
     }

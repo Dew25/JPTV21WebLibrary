@@ -49,7 +49,7 @@ public class HistoryServlet extends HttpServlet {
             case "/takeOnBook":
                 request.setAttribute("listReaders", readerFacade.findAll());
                 request.setAttribute("listBooks", bookFacade.findAll());
-                request.getRequestDispatcher("/WEB-INF/takeOnBook.jsp").forward(request, response);
+                request.getRequestDispatcher("/WEB-INF/books/takeOnBook.jsp").forward(request, response);
                 break;
             
             case "/createHistory":
@@ -72,7 +72,7 @@ public class HistoryServlet extends HttpServlet {
             case "/returnBook":
                 List<History> listHistories = historyFacade.findListReadedBooks();
                 request.setAttribute("listHistories", listHistories);
-                request.getRequestDispatcher("/WEB-INF/returnBook.jsp").forward(request, response);
+                request.getRequestDispatcher("/WEB-INF/books/returnBook.jsp").forward(request, response);
                 break;
             case "/updateHistory":
                 String historyId = request.getParameter("historyId");

@@ -38,10 +38,10 @@ public class ReaderServlet extends HttpServlet {
         switch (path) {
             case "/listReaders":
                 request.setAttribute("listReaders", readerFacade.findAll());
-                request.getRequestDispatcher("/WEB-INF/listReaders.jsp").forward(request, response);
+                request.getRequestDispatcher("/WEB-INF/readers/listReaders.jsp").forward(request, response);
                 break;
             case "/newReader":
-                request.getRequestDispatcher("/WEB-INF/createReader.jsp").forward(request, response);
+                request.getRequestDispatcher("/WEB-INF/readers/createReader.jsp").forward(request, response);
                 break;
             case "/createReader":
                 String firstname = request.getParameter("forstname");
@@ -53,7 +53,7 @@ public class ReaderServlet extends HttpServlet {
                 reader.setPhone(phone);
                 readerFacade.create(reader);
                 request.setAttribute("listReaders", readerFacade.findAll());
-                request.getRequestDispatcher("/listReaders").forward(request, response);
+                request.getRequestDispatcher("/WEB-INF/readers/listReaders").forward(request, response);
                 break;
             
         }
