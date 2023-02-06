@@ -5,6 +5,7 @@
  */
 package model.session;
 
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -29,4 +30,8 @@ public class HistoryFacade extends AbstractFacade<History> {
         super(History.class);
     }
     
+    public List<History> findListReadedBooks(){
+        return em.createQuery("SELECT h FROM History h WHERE h.returnBookDate=NULL")
+                .getResultList();
+    }
 }

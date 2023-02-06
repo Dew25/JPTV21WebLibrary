@@ -8,6 +8,7 @@ package controller;
 import model.entity.Reader;
 import java.io.IOException;
 import java.util.GregorianCalendar;
+import java.util.List;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -27,6 +28,8 @@ import model.session.ReaderFacade;
 @WebServlet(name = "HistoryServlet", urlPatterns = {
     "/takeOnBook",
     "/createHistory",
+    "/returnBook",
+    "/updateHistory"
     
     
 })
@@ -66,7 +69,19 @@ public class HistoryServlet extends HttpServlet {
                 );
                 request.getRequestDispatcher("/index.jsp").forward(request, response);
                 break;
-            
+            case "/returnBook":
+                List<History> listHistories = historyFacade.findListReadedBooks();
+                request.setAttribute("listHistories", listHistories);
+                request.getRequestDispatcher("/WEB-INF/returnBook.jsp").forward(request, response);
+                break;
+            case "/updateHistory":
+                String historyId = request.getParameter("historyId");
+                history = historyFacade.find(Long.parseLong(historyId));
+                history.setReturnBookDate(new GregorianCalendar().getTime());
+                historyFacade.edit(history);
+                request.getRequestDispatcher("/returnBook").forward(request, response);
+                break;
+                
         }
     }
 
