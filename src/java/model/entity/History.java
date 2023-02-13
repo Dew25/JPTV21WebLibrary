@@ -7,6 +7,7 @@ package model.entity;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -87,6 +88,47 @@ public class History implements Serializable {
                 + ", takeOnBookDate=" + takeOnBookDate 
                 + ", returnBookDate=" + returnBookDate 
                 + '}';
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 47 * hash + Objects.hashCode(this.id);
+        hash = 47 * hash + Objects.hashCode(this.book);
+        hash = 47 * hash + Objects.hashCode(this.reader);
+        hash = 47 * hash + Objects.hashCode(this.takeOnBookDate);
+        hash = 47 * hash + Objects.hashCode(this.returnBookDate);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final History other = (History) obj;
+        if (!Objects.equals(this.id, other.id)) {
+            return false;
+        }
+        if (!Objects.equals(this.book, other.book)) {
+            return false;
+        }
+        if (!Objects.equals(this.reader, other.reader)) {
+            return false;
+        }
+        if (!Objects.equals(this.takeOnBookDate, other.takeOnBookDate)) {
+            return false;
+        }
+        if (!Objects.equals(this.returnBookDate, other.returnBookDate)) {
+            return false;
+        }
+        return true;
     }
 
     

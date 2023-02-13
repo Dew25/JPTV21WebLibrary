@@ -24,14 +24,16 @@ import model.session.UserFacade;
  *
  * @author Melnikov
  */
-@WebServlet(name = "AdminServlet",loadOnStartup = 1, urlPatterns = {
+@WebServlet(name = "LoginServlet",loadOnStartup = 1, urlPatterns = {
     "/login",
     "/enter",
     "/logout",
+    "/newReader",
+    "/registration",
    
     
 })
-public class AdminServlet extends HttpServlet {
+public class LoginServlet extends HttpServlet {
 
     @EJB private ReaderFacade readerFacade;
     @EJB private RoleFacade roleFacade;
@@ -54,10 +56,12 @@ public class AdminServlet extends HttpServlet {
         readerFacade.create(reader);
         user.setReader(reader);
         user.getRoles().add(role);
+        
         role = new Role();
         role.setRoleName("EMPLOYEE");
         roleFacade.create(role);
         user.getRoles().add(role);
+        
         role = new Role();
         role.setRoleName("USER");
         roleFacade.create(role);
@@ -101,6 +105,30 @@ public class AdminServlet extends HttpServlet {
                 }
                 request.setAttribute("info", "Вы вышли");
                 request.getRequestDispatcher("/index.jsp").forward(request, response);
+                break;
+            case "/newReader":
+                request.getRequestDispatcher("/WEB-INF/readers/createReader.jsp").forward(request, response);
+                break;
+            case "/registration":
+                String firstname = request.getParameter("firstname");
+                String lastname = request.getParameter("lastname");
+                String phone = request.getParameter("phone");
+                login = request.getParameter("login");
+                password = request.getParameter("password");
+                Reader reader = new Reader();
+                reader.setFirstname(firstname);
+                reader.setLastname(lastname);
+                reader.setPhone(phone);
+                readerFacade.create(reader);
+                user = new User();
+                user.setLogin(login);
+                user.setPassword(password);
+                user.setReader(reader);
+                Role roleUser = roleFacade.findRoleByName("USER");
+                user.getRoles().add(roleUser);
+                userFacade.create(user);
+                request.setAttribute("listReaders", readerFacade.findAll());
+                request.getRequestDispatcher("/listReaders").forward(request, response);
                 break;
             
         }

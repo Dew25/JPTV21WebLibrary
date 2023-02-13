@@ -15,35 +15,63 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import model.entity.Book;
 import model.entity.History;
+import model.entity.cequre.Role;
+import model.entity.cequre.User;
+import model.session.AuthorFacade;
 import model.session.BookFacade;
 import model.session.HistoryFacade;
 import model.session.ReaderFacade;
+import model.session.RoleFacade;
 
 /**
  *
  * @author Melnikov
  */
-@WebServlet(name = "HistoryServlet", urlPatterns = {
+@WebServlet(name = "UserServlet", urlPatterns = {
     "/takeOnBook",
     "/createHistory",
     "/returnBook",
-    "/updateHistory"
+    "/updateHistory",
+    "/listBooks",
+    "/listAuthors"
     
     
 })
-public class HistoryServlet extends HttpServlet {
+public class UserServlet extends HttpServlet {
 
     @EJB private ReaderFacade readerFacade;
     @EJB private BookFacade bookFacade;
     @EJB private HistoryFacade historyFacade;
+    @EJB private AuthorFacade authorFacade;
+    @EJB private RoleFacade roleFacade;
     
     
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         request.setCharacterEncoding("UTF-8");
+        
+        HttpSession session = request.getSession(false);
+        if(session == null){
+            request.setAttribute("info", "У вас нет достаночного права. Авторизуйтесь!");
+            request.getRequestDispatcher("/index.jsp").forward(request, response);
+            return;
+        }
+        User authUser = (User) session.getAttribute("user");
+        if(authUser==null){
+            request.setAttribute("info", "У вас нет достаночного права. Авторизуйтесь!");
+            request.getRequestDispatcher("/index.jsp").forward(request, response);
+            return;
+        }
+        Role roleUser = roleFacade.findRoleByName("USER");
+        if(!authUser.getRoles().contains(roleUser)){
+            request.setAttribute("info", "У вас нет достаночного права. Авторизуйтесь!");
+            request.getRequestDispatcher("/index.jsp").forward(request, response);
+            return;
+        }
         String path = request.getServletPath();
         switch (path) {
             case "/takeOnBook":
@@ -81,6 +109,14 @@ public class HistoryServlet extends HttpServlet {
                 historyFacade.edit(history);
                 request.getRequestDispatcher("/returnBook").forward(request, response);
                 break;
+            case "/listBooks":
+                request.setAttribute("listBooks", bookFacade.findAll());
+                request.getRequestDispatcher("/WEB-INF/books/listBooks.jsp").forward(request, response);
+                break;    
+            case "/listAuthors":
+                request.setAttribute("listAuthors", authorFacade.findAll());
+                request.getRequestDispatcher("/WEB-INF/authors/listAuthors.jsp").forward(request, response);
+                break;    
                 
         }
     }

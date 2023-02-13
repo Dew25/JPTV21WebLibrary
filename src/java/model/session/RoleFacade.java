@@ -28,5 +28,11 @@ public class RoleFacade extends AbstractFacade<Role> {
     public RoleFacade() {
         super(Role.class);
     }
+
+    public Role findRoleByName(String roleName) {
+        return (Role) em.createQuery("SELECT r FROM Role r WHERE r.roleName=:roleName")
+                .setParameter("roleName", roleName)
+                .getSingleResult();
+    }
     
 }
