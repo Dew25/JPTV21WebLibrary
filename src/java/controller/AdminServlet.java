@@ -23,30 +23,27 @@ import model.session.AuthorFacade;
 import model.session.BookFacade;
 import model.session.ReaderFacade;
 import model.session.RoleFacade;
+import model.session.UserFacade;
 
 /**
  *
  * @author Melnikov
  */
-@WebServlet(name = "EmployeeServlet", urlPatterns = {
-    "/newBook",
-    "/createBook",
-    "/newAuthor",
-    "/createAuthor",
-    "/listReaders",
+@WebServlet(name = "AdminServlet", urlPatterns = {
+    "/changeRole",
+    "/updateRole",
+    
 })
-public class EmployeeServlet extends HttpServlet {
+public class AdminServlet extends HttpServlet {
 
-    @EJB private AuthorFacade authorFacade;
-    @EJB private BookFacade bookFacade;
-    @EJB private ReaderFacade readerFacade;
+    @EJB private UserFacade userFacade;
     @EJB private RoleFacade roleFacade;
     
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         request.setCharacterEncoding("UTF-8");
-           HttpSession session = request.getSession(false);
+        HttpSession session = request.getSession(false);
         if(session == null){
             request.setAttribute("info", "У вас нет достаночного права. Авторизуйтесь!");
             request.getRequestDispatcher("/index.jsp").forward(request, response);
@@ -58,8 +55,8 @@ public class EmployeeServlet extends HttpServlet {
             request.getRequestDispatcher("/index.jsp").forward(request, response);
             return;
         }
-        Role roleEmployee = roleFacade.findRoleByName("EMPLOYEE");
-        if(!authUser.getRoles().contains(roleEmployee)){
+        Role roleAdmin = roleFacade.findRoleByName("ADMIN");
+        if(!authUser.getRoles().contains(roleAdmin)){
             request.setAttribute("info", "У вас нет достаночного права. Авторизуйтесь!");
             request.getRequestDispatcher("/index.jsp").forward(request, response);
             return;
@@ -67,51 +64,25 @@ public class EmployeeServlet extends HttpServlet {
         String path = request.getServletPath();
         switch (path) {
             
-            case "/newBook":
-                request.setAttribute("listAuthors", authorFacade.findAll());
-                request.getRequestDispatcher("/WEB-INF/books/createBook.jsp").forward(request, response);
+            case "/changeRole":
+                request.setAttribute("listRoles", roleFacade.findAll());
+                request.setAttribute("listUsers", userFacade.findAll());
+                request.getRequestDispatcher("/WEB-INF/admin/changeRole.jsp").forward(request, response);
                 break;
-            case "/createBook":
-                String name = request.getParameter("name");
-                String publishedYear = request.getParameter("publishedYear");
-                String quantity = request.getParameter("quantity");
-                String[] authors = request.getParameterValues("authors");
-                List<Author> listBookAuthors = new ArrayList<>();
-                for (int i = 0; i < authors.length; i++) {
-                    listBookAuthors.add(authorFacade.find(new Long(authors[i])));
+            case "/updateRole":
+                String userId = request.getParameter("userId");
+                String roleId = request.getParameter("roleId");
+                User user = userFacade.find(Long.parseLong(userId));
+                Role role = roleFacade.find(Long.parseLong(roleId));
+                String action = request.getParameter("action");
+                if(action.equals("Добавить")){
+                    user.getRoles().add(role);
+                }else if(action.equals("Удалить")){
+                    user.getRoles().remove(role);
                 }
-                Book book = new Book();
-                book.setName(name);
-                book.setPublishedYear(Integer.parseInt(publishedYear));
-                book.setQuantity(Integer.parseInt(quantity));
-                book.setCount(book.getQuantity());
-                book.setAuthors(listBookAuthors);
-                bookFacade.create(book);
-                for (int i = 0; i < listBookAuthors.size(); i++) {
-                    Author a = listBookAuthors.get(i);
-                    a.getBooks().add(book);
-                    authorFacade.edit(a);
-                }
-                request.setAttribute("listBooks", bookFacade.findAll());
-                request.getRequestDispatcher("/WEB-INF/books/listBooks.jsp").forward(request, response);
+                userFacade.edit(user);
+                request.getRequestDispatcher("/changeRole").forward(request, response);
                 break;
-            case "/newAuthor":
-                request.getRequestDispatcher("/WEB-INF/authors/createAuthor.jsp").forward(request, response);
-                break;
-            case "/createAuthor":
-                String firstname = request.getParameter("firstname");
-                String lastname = request.getParameter("lastname");
-                Author newAuthor = new Author();
-                newAuthor.setFirstname(firstname);
-                newAuthor.setLastname(lastname);
-                authorFacade.create(newAuthor);
-                request.getRequestDispatcher("/newBook").forward(request, response);
-                break;
-             
-            case "/listReaders":
-                request.setAttribute("listReaders", readerFacade.findAll());
-                request.getRequestDispatcher("/WEB-INF/readers/listReaders.jsp").forward(request, response);
-                break;    
         }
     }
 
