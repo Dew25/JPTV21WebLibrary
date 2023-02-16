@@ -1,11 +1,11 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<h1  class="w-100 d-flex justify-content-center mt-5">Администрирование</h1>
+<h2  class="w-100 d-flex justify-content-center mt-5">Администрирование</h2>
 <div class="w-100 d-flex justify-content-center mt-4">
     <div class="card border-0" style="width: 24rem;">
         <form action="updateRole" method="POST">
-            <b>Пользователи:</b> 
-            <select class="form-select border-0" name="userId">
+            <h5>Пользователи:</h5> 
+            <select class="form-select" name="userId">
                 <option selected disabled>Выберите пользователя</option>
                 <c:forEach var="user" items="${listUsers}">
                     <option value="${user.id}">
@@ -17,8 +17,8 @@
 
                 </c:forEach>
             </select>
-            <b>Роли:</b> 
-            <select class="form-select border-0" name="roleId">
+            <h5>Роли:</h5> 
+            <select class="form-select" name="roleId">
                 <option selected disabled>Выберите роль</option>
                 <c:forEach var="role" items="${listRoles}">
                     <option value="${role.id}">
@@ -26,9 +26,9 @@
                     </option>
                 </c:forEach>
             </select>
-            <p class="w-100 mt-3 d-flex justify-content-between">
-                <input type="submit" name="action" value="Добавить">
-                <input type="submit" name="action" value="Удалить">
+            <p class="w-100 mt-5 d-flex justify-content-evenly">
+                <input class="btn btn-secondary w-25" type="submit" name="action" value="Добавить">
+                <input class="btn btn-secondary w-25" type="submit" name="action" value="Удалить">
             </p>
         </form>
     </div>

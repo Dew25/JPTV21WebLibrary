@@ -78,7 +78,7 @@ public class LoginServlet extends HttpServlet {
         String path = request.getServletPath();
         switch (path) {
             case "/login":
-                request.getRequestDispatcher("/WEB-INF/admin/login.jsp").forward(request, response);
+                request.getRequestDispatcher("/WEB-INF/readers/login.jsp").forward(request, response);
                 break;
             case "/enter":
                 String login = request.getParameter("login");

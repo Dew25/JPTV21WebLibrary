@@ -75,25 +75,25 @@ public class UserServlet extends HttpServlet {
         String path = request.getServletPath();
         switch (path) {
             case "/takeOnBook":
-                request.setAttribute("listReaders", readerFacade.findAll());
+                //request.setAttribute("listReaders", readerFacade.findAll());
                 request.setAttribute("listBooks", bookFacade.findAll());
                 request.getRequestDispatcher("/WEB-INF/books/takeOnBook.jsp").forward(request, response);
                 break;
             
             case "/createHistory":
                 String bookId = request.getParameter("bookId");
-                String readerId = request.getParameter("readerId");
+                //String readerId = request.getParameter("readerId");
                 Book book = bookFacade.find(Long.parseLong(bookId));
-                Reader reader = readerFacade.find(Long.parseLong(readerId));
+                User user = (User) session.getAttribute("user");;
                 History history = new History();
                 history.setBook(book);
-                history.setReader(reader);
+                history.setReader(user.getReader());
                 history.setTakeOnBookDate(new GregorianCalendar().getTime());
                 historyFacade.create(history);
                 request.setAttribute("info", 
                         "Книга \""+book.getName()
                                 +"\"выдана читателю "
-                                +reader.getFirstname()+" "+reader.getLastname()
+                                +user.getReader().getFirstname()+" "+user.getReader().getLastname()
                 );
                 request.getRequestDispatcher("/index.jsp").forward(request, response);
                 break;

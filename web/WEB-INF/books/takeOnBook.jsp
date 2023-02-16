@@ -16,15 +16,7 @@
                     </c:forEach>
                 </select>
             </p>
-            <h5 class="card-title w-100">Список читателей</h5>
-            <p class="card-text w-100">
-                <select name="readerId"class="w-100">
-                    <option  selected disabled>Выберите читателя</option>
-                    <c:forEach var="reader" items="${listReaders}">
-                        <option value="${reader.id}">${reader.firstname} ${reader.lastname}</option>
-                    </c:forEach>
-                </select>
-            </p>
+            
             <p class="card-text w-100 d-flex justify-content-end">
                 <input type="submit" value="Выдать книгу">
             </p>

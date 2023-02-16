@@ -55,16 +55,20 @@
                 </ul>
               </li>
             </ul>
-            <ul class="navbar-nav me-right mb-2 mb-lg-0">
-                <li class="nav-item">
-                  <a class="dropdown-item" href="login">Вход</a>
-                </li>
-            </ul>
-            <ul class="navbar-nav me-right mb-2 mb-lg-0">
-                <li class="nav-item">
-                  <a class="dropdown-item" href="logout">Выход</a>
-                </li>
-            </ul>
+            <c:if test="${sessionScope.user == null}">
+                <ul class="navbar-nav me-right mb-2 mb-lg-0">
+                    <li class="nav-item">
+                      <a class="dropdown-item" href="login">Вход</a>
+                    </li>
+                </ul>
+            </c:if>
+            <c:if test="${sessionScope.user != null}">
+                <ul class="navbar-nav me-right mb-2 mb-lg-0">
+                    <li class="nav-item">
+                      <a class="dropdown-item" href="logout">Выход</a>
+                    </li>
+                </ul>
+            </c:if>
 <!--            <form class="d-flex">
               <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
               <button class="btn btn-outline-success" type="submit">Search</button>

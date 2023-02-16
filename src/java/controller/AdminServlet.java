@@ -75,6 +75,11 @@ public class AdminServlet extends HttpServlet {
                 User user = userFacade.find(Long.parseLong(userId));
                 Role role = roleFacade.find(Long.parseLong(roleId));
                 String action = request.getParameter("action");
+                if("admin".equals(user.getLogin())){
+                    request.setAttribute("info", "Редактирование прав невозможно");
+                    request.getRequestDispatcher("/changeRole").forward(request, response);
+                    break;
+                }
                 if(action.equals("Добавить")){
                     user.getRoles().add(role);
                 }else if(action.equals("Удалить")){
