@@ -86,6 +86,7 @@ public class AdminServlet extends HttpServlet {
                     user.getRoles().remove(role);
                 }
                 userFacade.edit(user);
+                session.setAttribute("user", user);
                 request.getRequestDispatcher("/changeRole").forward(request, response);
                 break;
         }

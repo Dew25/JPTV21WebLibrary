@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import model.entity.cequre.Role;
 import model.entity.cequre.User;
+import model.session.BookFacade;
 import model.session.ReaderFacade;
 import model.session.RoleFacade;
 import model.session.UserFacade;
@@ -30,6 +31,7 @@ import model.session.UserFacade;
     "/logout",
     "/newReader",
     "/registration",
+    "/listBooks",
    
     
 })
@@ -38,6 +40,7 @@ public class LoginServlet extends HttpServlet {
     @EJB private ReaderFacade readerFacade;
     @EJB private RoleFacade roleFacade;
     @EJB private UserFacade userFacade;
+    @EJB private BookFacade bookFacade;
     
     @Override
     public void init() throws ServletException {
@@ -130,6 +133,10 @@ public class LoginServlet extends HttpServlet {
                 request.setAttribute("listReaders", readerFacade.findAll());
                 request.getRequestDispatcher("/listReaders").forward(request, response);
                 break;
+            case "/listBooks":
+                request.setAttribute("listBooks", bookFacade.findAll());
+                request.getRequestDispatcher("/WEB-INF/books/listBooks.jsp").forward(request, response);
+                break;        
             
         }
     }

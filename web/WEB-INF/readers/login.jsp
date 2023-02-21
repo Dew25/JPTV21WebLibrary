@@ -3,7 +3,7 @@
 
 <h2 class="w-100 d-flex justify-content-center mt-5">Вход в систему</h2>
 <div class="w-100 d-flex justify-content-center mt-5">
-    <div class="card border-0" style="width: 30rem;">
+    <div class="card p-2" style="width: 35rem;">
       <div class="card-body">
         <form action="enter" method="POST">
           <div class="my-2 row">
@@ -22,6 +22,9 @@
             <input type="submit" class="btn btn-secondary col-sm-4" value="Войти" id="inputEnter">
           </div>
         </form>
+          <div class="mb-2 row">
+              <p class="text-info w-100 d-flex justify-content-end"><a href="newReader">Зарегистрироваться</a></p>
+          </div>
       </div>
     </div>
 </div>
