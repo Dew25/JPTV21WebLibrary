@@ -35,7 +35,9 @@ import model.session.RoleFacade;
     "/createHistory",
     "/returnBook",
     "/updateHistory",
-    "/listAuthors"
+    "/listAuthors",
+    "/book",
+        
     
     
 })
@@ -112,6 +114,11 @@ public class UserServlet extends HttpServlet {
             case "/listAuthors":
                 request.setAttribute("listAuthors", authorFacade.findAll());
                 request.getRequestDispatcher("/WEB-INF/authors/listAuthors.jsp").forward(request, response);
+                break;    
+            case "/book":
+                String id = request.getParameter("id");
+                request.setAttribute("book", bookFacade.find(Long.parseLong(id)));
+                request.getRequestDispatcher("/WEB-INF/books/book.jsp").forward(request, response);
                 break;    
                 
         }
