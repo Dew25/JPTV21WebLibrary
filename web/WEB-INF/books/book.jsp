@@ -4,7 +4,7 @@
         
         <div class="w-100 d-flex justify-content-center p-5">
            <div class="card" style="width: 18rem;">
-            <img src="images/voinaimir.bmp" class="card-img-top" alt="...">
+            <img src="${book.cover}" class="card-img-top" alt="...">
             <div class="card-body">
               <h5 class="card-title">${book.name}</h5>
               <p class="card-text">Аннотация</p>

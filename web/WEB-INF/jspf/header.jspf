@@ -108,4 +108,4 @@
           </div>
         </div>
       </nav>
-       <p class="info w-100 d-flex justify-content-center">${info}</p>
+       <p class="info w-100 my-3 d-flex justify-content-center">${info}</p>

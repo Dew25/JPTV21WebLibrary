@@ -15,6 +15,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 /**
  *
@@ -31,6 +32,8 @@ public class Book implements Serializable{
    private int publishedYear;
    private int quantity;
    private int count;
+   @OneToOne
+   private Cover cover;
 
     public Book() {
         authors = new ArrayList<>();
@@ -93,6 +96,7 @@ public class Book implements Serializable{
                 + ", publishedYear=" + publishedYear 
                 + ", quantity=" + quantity 
                 + ", count=" + count 
+                + ", cover.description=" + cover.getDescription()
                 + '}';
     }
 
@@ -139,6 +143,14 @@ public class Book implements Serializable{
             return false;
         }
         return true;
+    }
+
+    public Cover getCover() {
+        return cover;
+    }
+
+    public void setCover(Cover cover) {
+        this.cover = cover;
     }
    
 }

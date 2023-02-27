@@ -6,11 +6,11 @@
             <c:forEach var="author" items="${listAuthors}">
                 <li>
                     ${author.firstname} ${author.lastname}<br>
-                    <ul>
+                    <ol>
                         <c:forEach var="book" items="${author.books}">
-                            <li>${book.name}. ${book.publishedYear}</li>
+                            <li> <a href="book?id=${book.id}">${book.name}. ${book.publishedYear}</a></li>
                         </c:forEach>
-                    </ul>
+                    </ol>
                 </li>
             </c:forEach>
         </ol>

@@ -21,6 +21,7 @@ import model.entity.cequre.Role;
 import model.entity.cequre.User;
 import model.session.AuthorFacade;
 import model.session.BookFacade;
+import model.session.CoverFacade;
 import model.session.ReaderFacade;
 import model.session.RoleFacade;
 
@@ -41,6 +42,7 @@ public class EmployeeServlet extends HttpServlet {
     @EJB private BookFacade bookFacade;
     @EJB private ReaderFacade readerFacade;
     @EJB private RoleFacade roleFacade;
+    @EJB private CoverFacade coverFacade;
     
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -69,6 +71,7 @@ public class EmployeeServlet extends HttpServlet {
             
             case "/newBook":
                 request.setAttribute("listAuthors", authorFacade.findAll());
+                request.setAttribute("listCovers",coverFacade.findAll());
                 request.getRequestDispatcher("/WEB-INF/books/createBook.jsp").forward(request, response);
                 break;
             case "/createBook":
