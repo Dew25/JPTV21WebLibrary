@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import model.entity.Cover;
 import model.entity.cequre.Role;
 import model.entity.cequre.User;
 import model.session.AuthorFacade;
@@ -68,7 +69,6 @@ public class EmployeeServlet extends HttpServlet {
         }
         String path = request.getServletPath();
         switch (path) {
-            
             case "/newBook":
                 request.setAttribute("listAuthors", authorFacade.findAll());
                 request.setAttribute("listCovers",coverFacade.findAll());
@@ -89,6 +89,9 @@ public class EmployeeServlet extends HttpServlet {
                 book.setQuantity(Integer.parseInt(quantity));
                 book.setCount(book.getQuantity());
                 book.setAuthors(listBookAuthors);
+                String coverId = request.getParameter("coverId");
+                Cover cover = coverFacade.find(Long.parseLong(coverId));
+                book.setCover(cover);
                 bookFacade.create(book);
                 for (int i = 0; i < listBookAuthors.size(); i++) {
                     Author a = listBookAuthors.get(i);
