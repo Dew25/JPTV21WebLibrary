@@ -30,6 +30,7 @@ public class User implements Serializable{
     @Column(unique = true)
     private String login;
     private String password;
+    private String salt;
     @OneToOne
     private Reader reader;
     @OneToMany
@@ -131,6 +132,14 @@ public class User implements Serializable{
             return false;
         }
         return true;
+    }
+
+    public String getSalt() {
+        return salt;
+    }
+
+    public void setSalt(String salt) {
+        this.salt = salt;
     }
     
 }

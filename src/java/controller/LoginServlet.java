@@ -20,6 +20,7 @@ import model.session.BookFacade;
 import model.session.ReaderFacade;
 import model.session.RoleFacade;
 import model.session.UserFacade;
+import tools.PassEncrypt;
 
 /**
  *
@@ -41,6 +42,7 @@ public class LoginServlet extends HttpServlet {
     @EJB private RoleFacade roleFacade;
     @EJB private UserFacade userFacade;
     @EJB private BookFacade bookFacade;
+    private PassEncrypt pe = new PassEncrypt();
     
     @Override
     public void init() throws ServletException {
@@ -51,7 +53,10 @@ public class LoginServlet extends HttpServlet {
         roleFacade.create(role);
         User user = new User();
         user.setLogin("admin");
-        user.setPassword("admin");
+        String salt = pe.getSalt();
+        String encryptPassword = pe.getEncryptedPass("admin", salt);
+        user.setPassword(encryptPassword);
+        user.setSalt(salt);
         Reader reader = new Reader();
         reader.setFirstname("Ivan");
         reader.setLastname("Ivanov");
@@ -92,7 +97,8 @@ public class LoginServlet extends HttpServlet {
                     request.getRequestDispatcher("/login").forward(request, response);
                     break;
                 }
-                if(!password.equals(user.getPassword())){
+                String encryptPassword = pe.getEncryptedPass(password, user.getSalt());
+                if(!encryptPassword.equals(user.getPassword())){
                     request.setAttribute("info", "Нет такого пользователя или неправильный пароль");
                     request.getRequestDispatcher("/login").forward(request, response);
                     break;
@@ -125,13 +131,18 @@ public class LoginServlet extends HttpServlet {
                 readerFacade.create(reader);
                 user = new User();
                 user.setLogin(login);
-                user.setPassword(password);
+                //Шифрование пароля
+                String salt = pe.getSalt();
+                encryptPassword = pe.getEncryptedPass(password, salt);
+                //---
+                user.setPassword(encryptPassword);
+                user.setSalt(salt);
                 user.setReader(reader);
                 Role roleUser = roleFacade.findRoleByName("USER");
                 user.getRoles().add(roleUser);
                 userFacade.create(user);
-                request.setAttribute("listReaders", readerFacade.findAll());
-                request.getRequestDispatcher("/listReaders").forward(request, response);
+                //request.setAttribute("listReaders", readerFacade.findAll());
+                request.getRequestDispatcher("/index.jsp").forward(request, response);
                 break;
             case "/listBooks":
                 request.setAttribute("listBooks", bookFacade.findAll());
