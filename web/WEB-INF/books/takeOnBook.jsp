@@ -6,7 +6,7 @@
 <div class="w-100 d-flex justify-content-center">
     <div class="card border-0" style="width: 25rem;">
       <div class="card-body">
-        <h5 class="card-title w-100">Список книг</h5>
+        <h3 class="card-title w-100 my-3">Список книг</h3>
         <form action="createHistory" method="POST">
             <p class="card-text w-100">
                 <select name="bookId" class="w-100">
@@ -16,7 +16,6 @@
                     </c:forEach>
                 </select>
             </p>
-            
             <p class="card-text w-100 d-flex justify-content-end">
                 <input type="submit" value="Выдать книгу">
             </p>
