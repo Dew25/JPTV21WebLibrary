@@ -105,7 +105,6 @@ public class Book implements Serializable{
         int hash = 7;
         hash = 13 * hash + Objects.hashCode(this.id);
         hash = 13 * hash + Objects.hashCode(this.name);
-        hash = 13 * hash + Objects.hashCode(this.authors);
         hash = 13 * hash + this.publishedYear;
         hash = 13 * hash + this.quantity;
         hash = 13 * hash + this.count;

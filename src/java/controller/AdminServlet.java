@@ -8,8 +8,11 @@ package controller;
 import model.entity.Author;
 import model.entity.Book;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -17,10 +20,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import model.entity.History;
 import model.entity.cequre.Role;
 import model.entity.cequre.User;
 import model.session.AuthorFacade;
 import model.session.BookFacade;
+import model.session.HistoryFacade;
 import model.session.ReaderFacade;
 import model.session.RoleFacade;
 import model.session.UserFacade;
@@ -32,12 +37,15 @@ import model.session.UserFacade;
 @WebServlet(name = "AdminServlet", urlPatterns = {
     "/changeRole",
     "/updateRole",
+    "/review",
+    "/showReview"
     
 })
 public class AdminServlet extends HttpServlet {
 
     @EJB private UserFacade userFacade;
     @EJB private RoleFacade roleFacade;
+    @EJB private HistoryFacade historyFacade;
     
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -89,6 +97,32 @@ public class AdminServlet extends HttpServlet {
                 session.setAttribute("user", user);
                 request.getRequestDispatcher("/changeRole").forward(request, response);
                 break;
+             case "/review":
+                SimpleDateFormat sdt = new SimpleDateFormat("y");
+                Integer year = Integer.parseInt(sdt.format(new Date()));
+                List<Integer> years = new ArrayList<>();
+                years.add(year - 1);
+                years.add(year);
+                request.setAttribute("years", years);
+                request.getRequestDispatcher("/WEB-INF/admin/review.jsp").forward(request, response);
+                break;   
+             case "/showReview":
+                String yearStr = request.getParameter("year");
+                String month = request.getParameter("month");
+                String day = request.getParameter("day");
+                if((month == null || month.isEmpty()) && (day == null || day.isEmpty())){
+                    request.setAttribute("period", yearStr+" год");
+                }else if(day == null || day.isEmpty() && (month != null || !month.isEmpty())){
+                    request.setAttribute("period", month+" месяц");
+                }else{
+                    int intMonth = Integer.parseInt(month);
+                    intMonth++;
+                    request.setAttribute("period",yearStr +" год, "+ intMonth+" месяц, "+day+" день");
+                }
+                Map<Book,Integer> mapBooksRange = historyFacade.getListHistoryPeriod(yearStr,month,day);
+                request.setAttribute("mapBooksRange", mapBooksRange);
+                request.getRequestDispatcher("/WEB-INF/admin/showReview.jsp").forward(request, response);
+                break;    
         }
     }
 
