@@ -78,7 +78,7 @@
                   </a>
                   <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                     <li><a class="dropdown-item" href="changeRole">Управление ролями</a></li>
-                    <li><a class="dropdown-item" href="review">Вывести оборот</a></li>
+                    <li><a class="dropdown-item" href="review">Вывести рейтинг читаемости</a></li>
 
                   </ul>
                 </li>

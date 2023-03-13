@@ -1,7 +1,7 @@
 
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<h2  class="w-100 d-flex justify-content-center mt-5">Обзор оборота магазина</h2>
+<h2  class="w-100 d-flex justify-content-center mt-5">Обзор читаемости книг</h2>
 <div class="w-100 d-flex justify-content-center mt-4">
     <div class="card border-0" style="width: 24rem;">
         <form action="showReview" method="POST">
@@ -19,7 +19,7 @@
             <select class="form-select" name="month">
                 <option selected disabled>Выберите месяц</option>
                 <c:forEach var="m" begin="0" end="11">
-                    <option value="${m}">
+                    <option value="${m+1}">
                         ${m+1}
                     </option>
                     

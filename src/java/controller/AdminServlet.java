@@ -119,8 +119,12 @@ public class AdminServlet extends HttpServlet {
                     intMonth++;
                     request.setAttribute("period",yearStr +" год, "+ intMonth+" месяц, "+day+" день");
                 }
-                Map<Book,Integer> mapBooksRange = historyFacade.getListHistoryPeriod(yearStr,month,day);
-                request.setAttribute("mapBooksRange", mapBooksRange);
+                Map<Book,Integer> mapBooksRange = historyFacade.getTakedBooksInPeriod(yearStr,month,day);
+                if(mapBooksRange.isEmpty()){
+                    request.setAttribute("info", "В этот период книги не выдавались");
+                }else{
+                    request.setAttribute("mapBooksRange", mapBooksRange);
+                }
                 request.getRequestDispatcher("/WEB-INF/admin/showReview.jsp").forward(request, response);
                 break;    
         }

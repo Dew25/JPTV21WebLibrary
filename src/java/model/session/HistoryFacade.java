@@ -6,8 +6,9 @@
 package model.session;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Month;
 import java.time.ZoneId;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -47,54 +48,54 @@ public class HistoryFacade extends AbstractFacade<History> {
                 .getResultList();
     }
 
-    public Map<Book,Integer> getListHistoryPeriod(String year, String month, String day) {
+    public Map<Book,Integer> getTakedBooksInPeriod(String year, String month, String day) {
+        if(year== null || year.isEmpty()){
+            return new HashMap<>();
+        }
         List<History> listHistories = null;
-        //найти дату на начало года year и дату на начало года year+1
+        //Если выбран только год
         if((month == null || month.isEmpty()) && (day == null || day.isEmpty())){
-            LocalDate date1 = LocalDate.now().withYear(Integer.parseInt(year));
-            LocalDate date2 = LocalDate.now().withYear(Integer.parseInt(year)+1);
-            
-            Date beginYear = Date.from(date1.atStartOfDay(ZoneId.systemDefault()).toInstant());
-            Date beginNextYear = Date.from(date2.atStartOfDay(ZoneId.systemDefault()).toInstant());
+            LocalDateTime date1 = LocalDateTime.of(Integer.parseInt(year),1, 1, 0, 0, 0); 
+            LocalDateTime date2 = date1.plusYears(1);
+            Date beginYear = Date.from(date1.atZone(ZoneId.systemDefault()).toInstant());
+            Date beginNextYear = Date.from(date2.atZone(ZoneId.systemDefault()).toInstant());
             listHistories = em.createQuery("SELECT h FROM History h WHERE h.takeOnBookDate > :beginYear AND h.takeOnBookDate< :beginNextYear")
                 .setParameter("beginYear", beginYear)
                 .setParameter("beginNextYear", beginNextYear)
                 .getResultList();
-            
-        }else if(day == null || day.isEmpty()){
-            Calendar c1 = Calendar.getInstance();
-            c1.set(Integer.parseInt(year),Integer.parseInt(month)-1);
-            Calendar c2 = Calendar.getInstance();
-            c2.set(Integer.parseInt(year),Integer.parseInt(month));
-            
-            listHistories = em.createQuery("SELECT h FROM History h WHERE h.takeOnBookDate > :beginMonth AND h.takeOnBookDate< :beginNextMonth")
-                .setParameter("beginYear", c1.getTime())
-                .setParameter("beginNextYear", c2.getTime())
+        //Если выбран год и месяц
+        }else if((month != null || !month.isEmpty()) && (day == null || day.isEmpty())){
+            LocalDateTime date1 = LocalDateTime.of(Integer.parseInt(year),Integer.parseInt(month), 1, 0, 0, 0); 
+            LocalDateTime date2 = date1.plusMonths(1);
+            Date beginMonth = Date.from(date1.atZone(ZoneId.systemDefault()).toInstant());
+            Date beginNextMonth = Date.from(date2.atZone(ZoneId.systemDefault()).toInstant());
+            listHistories = em.createQuery("SELECT h FROM History h WHERE h.takeOnBookDate > :beginMonth AND h.takeOnBookDate < :beginNextMonth")
+                .setParameter("beginMonth", beginMonth)
+                .setParameter("beginNextMonth", beginNextMonth)
                 .getResultList();
-        }else{
-            Calendar c1 = Calendar.getInstance();
-            c1.set(Integer.parseInt(year),Integer.parseInt(month), Integer.parseInt(day));
-            Calendar c2 = Calendar.getInstance();
-            c2.set(Integer.parseInt(year),Integer.parseInt(month), Integer.parseInt(day)+1);
+        }else{//Если выбран год, месяц и день
+            LocalDateTime date1 = LocalDateTime.of(Integer.parseInt(year),Integer.parseInt(month), Integer.parseInt(day), 0, 0, 0); 
+            LocalDateTime date2 = date1.plusDays(1);
+            Date begin = Date.from(date1.atZone(ZoneId.systemDefault()).toInstant());
+            Date next = Date.from(date2.atZone(ZoneId.systemDefault()).toInstant());
             listHistories = em.createQuery("SELECT h FROM History h WHERE h.takeOnBookDate > :begin AND h.takeOnBookDate< :beginNext")
-                .setParameter("begin", c1.getTime())
-                .setParameter("beginNext", c2.getTime())
+                .setParameter("begin", begin)
+                .setParameter("beginNext", next)
                 .getResultList();
         }
-        
-    
+        //Map для хранения сопоставления книга -> сколько раз выдана
         Map<Book, Integer>mapBooksRange = new HashMap<>();
         List<Book> books = bookFacade.findAll();
-        for (Book book : books) {
+        for (Book book : books) { //перебираем все книги
             mapBooksRange.put(book, 0);
             for (History history : listHistories) {
                 if(history.getBook().equals(book)){
                     Integer n = mapBooksRange.get(book);
-                    n++;
-                    mapBooksRange.put(book, n);
+                    n++;//к n добавляем 1, если книга есть в истории
+                    mapBooksRange.put(book, n);//обновляем значение n для книги
                 }
             }
         }
-        return mapBooksRange;
+        return mapBooksRange; // возвращаем карту Книга->сколько раз выдана за указанный период
     }
 }
