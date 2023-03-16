@@ -58,29 +58,29 @@ public class HistoryFacade extends AbstractFacade<History> {
             LocalDateTime date1 = LocalDateTime.of(Integer.parseInt(year),1, 1, 0, 0, 0); 
             LocalDateTime date2 = date1.plusYears(1);
             Date beginYear = Date.from(date1.atZone(ZoneId.systemDefault()).toInstant());
-            Date beginNextYear = Date.from(date2.atZone(ZoneId.systemDefault()).toInstant());
-            listHistories = em.createQuery("SELECT h FROM History h WHERE h.takeOnBookDate > :beginYear AND h.takeOnBookDate< :beginNextYear")
+            Date nextYear = Date.from(date2.atZone(ZoneId.systemDefault()).toInstant());
+            listHistories = em.createQuery("SELECT h FROM History h WHERE h.takeOnBookDate > :beginYear AND h.takeOnBookDate< :nextYear")
                 .setParameter("beginYear", beginYear)
-                .setParameter("beginNextYear", beginNextYear)
+                .setParameter("nextYear", nextYear)
                 .getResultList();
         //Если выбран год и месяц
         }else if((month != null || !month.isEmpty()) && (day == null || day.isEmpty())){
             LocalDateTime date1 = LocalDateTime.of(Integer.parseInt(year),Integer.parseInt(month), 1, 0, 0, 0); 
             LocalDateTime date2 = date1.plusMonths(1);
             Date beginMonth = Date.from(date1.atZone(ZoneId.systemDefault()).toInstant());
-            Date beginNextMonth = Date.from(date2.atZone(ZoneId.systemDefault()).toInstant());
-            listHistories = em.createQuery("SELECT h FROM History h WHERE h.takeOnBookDate > :beginMonth AND h.takeOnBookDate < :beginNextMonth")
+            Date nextMonth = Date.from(date2.atZone(ZoneId.systemDefault()).toInstant());
+            listHistories = em.createQuery("SELECT h FROM History h WHERE h.takeOnBookDate > :beginMonth AND h.takeOnBookDate < :nextMonth")
                 .setParameter("beginMonth", beginMonth)
-                .setParameter("beginNextMonth", beginNextMonth)
+                .setParameter("nextMonth", nextMonth)
                 .getResultList();
         }else{//Если выбран год, месяц и день
             LocalDateTime date1 = LocalDateTime.of(Integer.parseInt(year),Integer.parseInt(month), Integer.parseInt(day), 0, 0, 0); 
             LocalDateTime date2 = date1.plusDays(1);
-            Date begin = Date.from(date1.atZone(ZoneId.systemDefault()).toInstant());
-            Date next = Date.from(date2.atZone(ZoneId.systemDefault()).toInstant());
-            listHistories = em.createQuery("SELECT h FROM History h WHERE h.takeOnBookDate > :begin AND h.takeOnBookDate< :beginNext")
-                .setParameter("begin", begin)
-                .setParameter("beginNext", next)
+            Date beginDay = Date.from(date1.atZone(ZoneId.systemDefault()).toInstant());
+            Date nextDay = Date.from(date2.atZone(ZoneId.systemDefault()).toInstant());
+            listHistories = em.createQuery("SELECT h FROM History h WHERE h.takeOnBookDate > :beginDay AND h.takeOnBookDate< :nextDay")
+                .setParameter("beginDay", beginDay)
+                .setParameter("nextDay", nextDay)
                 .getResultList();
         }
         //Map для хранения сопоставления книга -> сколько раз выдана
