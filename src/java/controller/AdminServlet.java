@@ -115,9 +115,7 @@ public class AdminServlet extends HttpServlet {
                 }else if(day == null || day.isEmpty() && (month != null || !month.isEmpty())){
                     request.setAttribute("period", month+" месяц");
                 }else{
-                    int intMonth = Integer.parseInt(month);
-                    intMonth++;
-                    request.setAttribute("period",yearStr +" год, "+ intMonth+" месяц, "+day+" день");
+                    request.setAttribute("period",yearStr +" год, "+ month+" месяц, "+day+" день");
                 }
                 Map<Book,Integer> mapBooksRange = historyFacade.getTakedBooksInPeriod(yearStr,month,day);
                 if(mapBooksRange.isEmpty()){

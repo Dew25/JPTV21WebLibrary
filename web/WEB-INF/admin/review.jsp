@@ -1,5 +1,3 @@
-
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <h2  class="w-100 d-flex justify-content-center mt-5">Обзор читаемости книг</h2>
 <div class="w-100 d-flex justify-content-center mt-4">
